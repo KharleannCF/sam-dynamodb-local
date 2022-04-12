@@ -26,7 +26,7 @@ def lambda_handler(event, context):
 
         else:
             # Environment is Linux
-            person_table = boto3.resource('dynamodb', endpoint_url="http://127.0.0.1:8000").Table(table_name)
+            person_table = boto3.resource('dynamodb', endpoint_url="http://dynamodb:8000").Table(table_name)
     else:
         # AWS
         person_table = boto3.resource('dynamodb', region_name=region).Table(table_name)

@@ -26,40 +26,60 @@ b. User-specified input parameters will be marked with curly braces in the follo
 1. Clone this repo and change to the directory 'sam-dynamodb-local'.  
   
 2. Start DynamoDB Local by executing the following at the command prompt:  
-	*docker run -p 8000:8000 amazon/dynamodb-local*  
+	```bash
+    docker-compose up dynamo
+    ```
     This will run the DynamoDB local in a docker container at port 8000.  
 
 3. At the command prompt, list the tables on DynamoDB Local by executing:  
-    *aws dynamodb list-tables --endpoint-url http://localhost:8000*  
-
+    ```bash
+    aws dynamodb list-tables --endpoint-url http://localhost:8000*  
+    ```
 4. An output such as the one shown below confirms that the DynamoDB local instance has been installed and running:  
-    *{*  
-      *"TableNames": []*   
-    *}*    
-
-5. At the command prompt, create the PersonTable by executing:  
-    *aws dynamodb create-table --cli-input-json file://json/create-person-table.json --endpoint-url http://localhost:8000*  
-      
+    ```bash
+    {  
+      "TableNames": []   
+    }    
+    ```
+5. At the command prompt, create the PersonTable by executing:
+    ```bash
+    aws dynamodb create-table --cli-input-json file://json/create-person-table.json --endpoint-url http://localhost:8000  
+    ```  
       **Note:** If you misconfigured your table and need to delete it, you may do so by executing the following command:  
-        *aws dynamodb delete-table --table-name PersonTable --endpoint-url http://localhost:8000*  
+        ```bash
+        aws dynamodb delete-table --table-name PersonTable --endpoint-url http://localhost:8000
+        ```  
 
-6. At the command prompt, start the local API Gateway instance by executing:  
-    *sam local start-api --env-vars json/env.json*  
-
+6. At the command prompt, start the local API Gateway instance by executing:
+    ```bash
+    sam local start-api --env-vars json/env.json --docker-network dybamodb  
+    ```
 ### Testing the application
 1. Insert a Person item in the table by executing the following CURL command at the prompt:  
-   *curl -d '{"FName": "Henry", "LName": "McKenna", "Age": 10}' http://127.0.0.1:3000/*  
+   ```bash
+   curl -d '{"FName": "Henry", "LName": "McKenna", "Age": 10}' http://127.0.0.1:3000/
+   ```
 
-    This should output the partition key(GUID) of the item inserted into the local DynamoDB instance, such as:  
-    *12a72031-8b5c-4c76-8c90-83f3d5132088*  
+    This should output the partition key(GUID) of the item inserted into the local DynamoDB instance, such as:
+    ```bash  
+    12a72031-8b5c-4c76-8c90-83f3d5132088
+    ```  
 
 2. Let's retrieve the item from the local DynamoDB instance by executing the following CURL command at the prompt:  
-    *curl -X GET -d ‘{“Id”:”12a72031-8b5c-4c76-8c90-83f3d5132088”}’  http://127.0.0.1:3000*  
+    
+    ```bash
+    curl -X GET -d ‘{“Id”:”12a72031-8b5c-4c76-8c90-83f3d5132088”}’  http://127.0.0.1:3000
+    ```
 
     This will display the output as follows:  
-    *Henry McKenna 10*  
-     
-**Note:** You may alternatively use a GUI to view the items on the local DynamoDB instance, such as the [DynamoDB Local Shell](http://localhost:8000/shell/) or [DynamoDB Manager](https://github.com/YoyaTeam/dynamodb-manager).   
+    *Henry McKenna 10*     
+
+### Changes made in order to make it work
+1. Created a a docker-composer file
+
+2. In the file ```Person.py``` changed the line 29 so the SAM local docker container can communicate with the dynamodb's docker container (in the case linux case, code could me improved)
+
+3. In the ```env.json``` changed the ```REGION``` and ```DEVENV``` variables to the region I created the aws account and to change the SO of the development environment.
 
 ### Deploying the application
 1. Create a S3 bucket for storing SAM deployment artifacts in the us-east-1 region (or a region of your choosing). Please note that you may not use '-' or '.' in your bucket name.  
