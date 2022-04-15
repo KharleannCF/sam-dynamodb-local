@@ -33,7 +33,7 @@ b. User-specified input parameters will be marked with curly braces in the follo
 
 3. At the command prompt, list the tables on DynamoDB Local by executing:  
     ```bash
-    aws dynamodb list-tables --endpoint-url http://localhost:8000*  
+    aws dynamodb list-tables --endpoint-url http://localhost:8000 
     ```
 4. An output such as the one shown below confirms that the DynamoDB local instance has been installed and running:  
     ```bash
@@ -52,7 +52,7 @@ b. User-specified input parameters will be marked with curly braces in the follo
 
 6. At the command prompt, start the local API Gateway instance by executing:
     ```bash
-    sam local start-api --env-vars json/env.json --docker-network dybamodb  
+    sam local start-api --env-vars json/env.json --docker-network abp-sam-backend  
     ```
 ### Testing the application
 1. Insert a Person item in the table by executing the following CURL command at the prompt:  
@@ -68,7 +68,7 @@ b. User-specified input parameters will be marked with curly braces in the follo
 2. Let's retrieve the item from the local DynamoDB instance by executing the following CURL command at the prompt:  
     
     ```bash
-    curl -X GET -d ‘{“Id”:”12a72031-8b5c-4c76-8c90-83f3d5132088”}’  http://127.0.0.1:3000
+    curl -X GET -d '{"Id":"ea4595e6-b432-4244-a433-ee3951c0f989"}'  http://127.0.0.1:3000
     ```
 
     This will display the output as follows:  

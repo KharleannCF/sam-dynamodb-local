@@ -15,7 +15,7 @@ services:
 
 networks:
   backend:
-    name: dynamodb
+    name: abp-sam-backend
 
 volumes:
   dynamodata: {}
